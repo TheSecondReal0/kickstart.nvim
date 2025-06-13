@@ -205,6 +205,15 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
 
+vim.keymap.set('n', '\\', ':Neotree toggle current reveal_force_cwd<cr>', { desc = 'Toggle neo-tree reveal' })
+vim.keymap.set('n', '|', ':Neotree reveal<cr>', { desc = 'Reveal neo-tree' })
+
+--nnoremap / :Neotree toggle current reveal_force_cwd<cr>
+--nnoremap | :Neotree reveal<cr>
+--nnoremap gd :Neotree float reveal_file=<cfile> reveal_force_cwd<cr>
+--nnoremap <leader>b :Neotree toggle show buffers right<cr>
+--nnoremap <leader>s :Neotree float git_status<cr>
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -977,7 +986,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -1011,6 +1020,23 @@ require('lazy').setup({
     },
   },
 })
+
+-- trigger autoread when switching back into vim
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
+  pattern = '*',
+  callback = function()
+    vim.cmd 'checktime'
+  end,
+})
+
+-- don't yank on deletes
+-- Map 'd' to delete to the black hole register "_d
+vim.keymap.set('n', 'd', '"_d', { noremap = true, silent = true })
+vim.keymap.set('n', 'x', '"_x', { noremap = true, silent = true })
+vim.keymap.set('n', 'dd', '"_dd', { noremap = true, silent = true })
+-- don't yank from visual mode
+vim.keymap.set('v', 'd', '"_d', { noremap = true, silent = true })
+vim.keymap.set('v', 'x', '"_x', { noremap = true, silent = true })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

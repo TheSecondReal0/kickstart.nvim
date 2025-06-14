@@ -1021,6 +1021,7 @@ require('lazy').setup({
   },
 })
 
+vim.opts.autoread = true
 -- trigger autoread when switching back into vim
 vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter' }, {
   pattern = '*',
